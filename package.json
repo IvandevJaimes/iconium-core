@@ -1,0 +1,27 @@
+{
+  "name": "iconium-core",
+  "version": "1.0.0",
+  "description": "iconium-core (API) v-1.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx ts-node --transpileOnly src/app.ts",
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "build:index": "npx ts-node --transpileOnly scripts/build-index.ts",
+    "download:svgs": "npx ts-node --transpileOnly scripts/download-svgs.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "ivanJ.Dev",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "simple-icons": "^16.16.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}
