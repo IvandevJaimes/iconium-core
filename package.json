@@ -16,10 +16,13 @@
   "license": "ISC",
   "dependencies": {
     "express": "^5.2.1",
+    "fast-levenshtein": "^3.0.0",
+    "ngram": "^0.0.3",
     "simple-icons": "^16.16.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/fast-levenshtein": "^0.0.4",
     "@types/node": "^25.6.0",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
