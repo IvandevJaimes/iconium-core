@@ -224,7 +224,20 @@ export const getIconBySlug = (slug: string) => {
     return null;
   }
   
-  const svgContent = fs.readFileSync(svgPath, 'utf-8');
+  let svgContent = fs.readFileSync(svgPath, 'utf-8');
+
+  // Apply original icon color from hex value
+  if (icon.hex) {
+    // Replace fill in <svg> tag
+    svgContent = svgContent.replace(/(<svg[^>]*)fill="[^"]+"/, `$1fill="#${icon.hex}"`);
+    // Replace fill in <path>, <rect>, <circle> etc.
+    svgContent = svgContent.replace(/(<(path|rect|circle|ellipse|polygon|polyline)[^>]*)fill="[^"]+"/g, `$1fill="#${icon.hex}"`);
+    // If no fill attribute exists, add it to the <svg> tag
+    if (!svgContent.includes('fill="#')) {
+      svgContent = svgContent.replace(/(<svg[^>]*)(>)/, `$1 fill="#${icon.hex}"$2`);
+    }
+  }
+
   return {
     title: icon.title,
     slug: icon.slug,
