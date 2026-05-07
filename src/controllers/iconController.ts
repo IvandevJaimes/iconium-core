@@ -16,6 +16,8 @@ export const search = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const MIN_ICON_SCORE = 0.9;
+
 export const getIcon = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { q } = req.query;
@@ -24,7 +26,7 @@ export const getIcon = async (req: Request, res: Response, next: NextFunction) =
       return;
     }
     const result = searchIcons(q, { limit: 1 });
-    if (!result.results.length || result.results[0].score < 0.95) {
+    if (!result.results.length || result.results[0].score < MIN_ICON_SCORE) {
       res.status(404).json({ error: 'No icon found with sufficient confidence' });
       return;
     }

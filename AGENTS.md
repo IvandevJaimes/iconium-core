@@ -16,7 +16,6 @@
 | Componentes React | PascalCase | `UserProfile.tsx` |
 | Funciones | camelCase | `getUserById` |
 | Constantes | UPPER_SNAKE | `MAX_RETRY_COUNT` |
-| Interfaces | PascalCase + sufijo | `UserDto`, `ApiResponse` |
 
 ### Formatting
 - Prettier for formatting, ESLint for linting.

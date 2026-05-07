@@ -17,7 +17,7 @@ import {
 // CONFIGURATION & CONSTANTS
 // ============================================
 
-const ICON_MANIFEST = iconManifest as Array<{ title: string; slug: string; hex: string; filename: string }>;
+const ICON_MANIFEST = iconManifest as Array<{ title: string; slug: string; hex: string; colors: string[]; categories: string[]; filename: string }>;
 const invertedIndex = INVERTED_INDEX as unknown as Record<string, number[]>;
 
 const SCORE_EXACT_MATCH = 1.0;
@@ -37,13 +37,8 @@ const SIMILARITY_THRESHOLD = 0.3;
 
 const getIconData = (index: number) => {
   const icon = ICON_MANIFEST[index];
-  if (!icon) return { title: '', slug: '', hex: '' };
-  return { title: icon.title, slug: icon.slug, hex: icon.hex };
-};
-
-const extractPathFromSvg = (svgString: string): string => {
-  const match = svgString.match(/d="([^"]+)"/);
-  return match ? match[1] : '';
+  if (!icon) return { title: '', slug: '', hex: '', colors: [], categories: [] };
+  return { title: icon.title, slug: icon.slug, hex: icon.hex, colors: icon.colors || [], categories: icon.categories || [] };
 };
 
 // ============================================
@@ -108,7 +103,7 @@ export const searchIcon = (
 
 const handleShortQuery = (normalizedQuery: string, cleanQuery: string, limit: number, page: number) => {
   const scored = ICON_INDEX.map((iconData, index) => {
-    const name = iconData.N;
+    const name = normalize(iconData.N); // Normalize icon name to match normalized query
     const nameClean = name.replace(/\s/g, '');
     const score = calculateShortQueryScore(cleanQuery, normalizedQuery, nameClean);
     return { index, score };
@@ -120,7 +115,7 @@ const handleShortQuery = (normalizedQuery: string, cleanQuery: string, limit: nu
 
   const results = paged.map(({ index, score }) => {
     const iconData = getIconData(index);
-    return { name: iconData.title, slug: iconData.slug, hex: iconData.hex, score: Math.round(score * 100) / 100 };
+    return { name: iconData.title, slug: iconData.slug, hex: iconData.hex, colors: iconData.colors, categories: iconData.categories, score: Math.round(score * 100) / 100 };
   });
 
   return { results, total, page, limit };
@@ -158,7 +153,7 @@ const handleLongQuery = (normalizedQuery: string, query: string, limit: number, 
     const iconData = ICON_INDEX[index];
     if (!iconData) continue;
 
-    const normalizedName = iconData.N;
+    const normalizedName = normalize(iconData.N); // Normalize icon name to match normalized query
     const score = calculateScore(normalizedQuery, normalizedName);
     scoredResults.push({ index, score: Math.max(0, score) });
   }
@@ -171,7 +166,7 @@ const handleLongQuery = (normalizedQuery: string, query: string, limit: number, 
 
   const results = paged.map(({ index, score }) => {
     const iconData = getIconData(index);
-    return { name: iconData.title, slug: iconData.slug, hex: iconData.hex, score: Math.round(score * 100) / 100 };
+    return { name: iconData.title, slug: iconData.slug, hex: iconData.hex, colors: iconData.colors, categories: iconData.categories, score: Math.round(score * 100) / 100 };
   });
 
   return { results, total, page, limit };
@@ -224,25 +219,14 @@ export const getIconBySlug = (slug: string) => {
     return null;
   }
   
-  let svgContent = fs.readFileSync(svgPath, 'utf-8');
-
-  // Apply original icon color from hex value
-  if (icon.hex) {
-    // Replace fill in <svg> tag
-    svgContent = svgContent.replace(/(<svg[^>]*)fill="[^"]+"/, `$1fill="#${icon.hex}"`);
-    // Replace fill in <path>, <rect>, <circle> etc.
-    svgContent = svgContent.replace(/(<(path|rect|circle|ellipse|polygon|polyline)[^>]*)fill="[^"]+"/g, `$1fill="#${icon.hex}"`);
-    // If no fill attribute exists, add it to the <svg> tag
-    if (!svgContent.includes('fill="#')) {
-      svgContent = svgContent.replace(/(<svg[^>]*)(>)/, `$1 fill="#${icon.hex}"$2`);
-    }
-  }
+  const svgContent = fs.readFileSync(svgPath, 'utf-8');
 
   return {
     title: icon.title,
     slug: icon.slug,
     hex: icon.hex,
+    colors: icon.colors || [],
+    categories: icon.categories || [],
     svg: svgContent || '',
-    path: extractPathFromSvg(svgContent || '')
   };
 };

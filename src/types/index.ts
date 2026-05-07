@@ -3,6 +3,8 @@ export interface SearchResult {
   name: string;
   slug: string;
   hex: string;
+  colors: string[];
+  categories: string[];
   score: number;
 }
 
@@ -18,6 +20,8 @@ export interface IconResponse {
   name: string;
   slug: string;
   hex: string;
+  colors: string[];
+  categories: string[];
   svg: string;
   score: number;
 }
@@ -26,10 +30,4 @@ export interface IconResponse {
 export interface SearchOptions {
   limit?: number;
   page?: number;
-}
-
-// SVG builder options
-export interface SvgBuilderOptions {
-  color?: string;
-  size?: number;
 }
