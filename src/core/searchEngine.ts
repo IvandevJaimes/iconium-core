@@ -41,6 +41,16 @@ const getIconData = (index: number) => {
   return { title: icon.title, slug: icon.slug, hex: icon.hex, colors: icon.colors || [], categories: icon.categories || [] };
 };
 
+const getSvgContent = (index: number): string => {
+  const entry = ICON_MANIFEST[index];
+  if (!entry) return '';
+  try {
+    return fs.readFileSync(path.join(__dirname, '../data/icons', entry.filename), 'utf-8');
+  } catch {
+    return '';
+  }
+};
+
 // ============================================
 // SCORING LOGIC
 // ============================================
@@ -115,7 +125,7 @@ const handleShortQuery = (normalizedQuery: string, cleanQuery: string, limit: nu
 
   const results = paged.map(({ index, score }) => {
     const iconData = getIconData(index);
-    return { name: iconData.title, slug: iconData.slug, hex: iconData.hex, colors: iconData.colors, categories: iconData.categories, score: Math.round(score * 100) / 100 };
+    return { name: iconData.title, slug: iconData.slug, hex: iconData.hex, colors: iconData.colors, categories: iconData.categories, svg: getSvgContent(index), score: Math.round(score * 100) / 100 };
   });
 
   return { results, total, page, limit };
@@ -166,7 +176,7 @@ const handleLongQuery = (normalizedQuery: string, query: string, limit: number, 
 
   const results = paged.map(({ index, score }) => {
     const iconData = getIconData(index);
-    return { name: iconData.title, slug: iconData.slug, hex: iconData.hex, colors: iconData.colors, categories: iconData.categories, score: Math.round(score * 100) / 100 };
+    return { name: iconData.title, slug: iconData.slug, hex: iconData.hex, colors: iconData.colors, categories: iconData.categories, svg: getSvgContent(index), score: Math.round(score * 100) / 100 };
   });
 
   return { results, total, page, limit };
@@ -199,7 +209,6 @@ export const getIconBySlug = (slug: string) => {
     icon = ICON_MANIFEST.find(i => normalizeSlug(i.slug) === normalizedSlug);
   }
   
-  // Strategy 4: Use search engine for fuzzy matching (handles vuejs → vuedotjs)
   if (!icon) {
     const searchResult = searchIcon(slug, { limit: 5 });
     for (const result of searchResult.results) {

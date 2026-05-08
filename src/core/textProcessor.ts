@@ -29,6 +29,8 @@ export const SYMBOL_MAP: Record<string, string> = {
   ".net": "dotnet",
   ".env": "dotenv",
   "/e/": "e",
+  "vscode": "visualstudiocode",
+  "sqlserver":"microsoftsqlserver",
 };
 
 export const normalize = (str: string): string => {

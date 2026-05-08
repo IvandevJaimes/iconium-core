@@ -5,6 +5,7 @@ export interface SearchResult {
   hex: string;
   colors: string[];
   categories: string[];
+  svg: string;
   score: number;
 }
 
