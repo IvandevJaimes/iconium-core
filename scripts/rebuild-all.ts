@@ -13,6 +13,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { tokenize, generateBigrams } from '../src/core/textProcessor';
 
 // ============================================
 // CONFIGURATION
@@ -51,73 +52,6 @@ interface ManifestEntry {
   categories: string[];
   filename: string;
 }
-
-// ============================================
-// SYMBOL MAP (must match src/core/textProcessor.ts)
-// ============================================
-
-const SYMBOL_MAP: Record<string, string> = {
-  'c++': 'cplusplus',
-  'cpp': 'cplusplus',
-  'c#': 'csharp',
-  'f#': 'fsharp',
-  'd3': 'd3',
-  'd3.js': 'd3',
-  'd3js': 'd3',
-  'd4': 'd4',
-  'at&t': 'atandt',
-  '1&1': '1and1',
-  '1.1.1.1': '1dot1dot1dot1',
-  'co-op': 'coop',
-  'ko-fi': 'kofi',
-  'p5.js': 'p5dotjs',
-  'p5js': 'p5dotjs',
-  'pr.co': 'prdotco',
-  '2k': '2k',
-  '3m': '3m',
-  '4d': '4d',
-  '42': '42',
-  'bt': 'bt',
-  'ea': 'ea',
-  'ce': 'ce',
-  'dm': 'dm',
-  'e3': 'e3',
-  'yr': 'yr',
-  'uv': 'uv',
-  'f5': 'f5',
-  'g2': 'g2',
-  '.net': 'dotnet',
-  '.env': 'dotenv',
-  '/e/': 'e',
-  'vscode': 'visualstudiocode',
-  'sqlserver': 'microsoftsqlserver',
-};
-
-const normalize = (str: string): string => {
-  const lower = str.toLowerCase().trim();
-  if (SYMBOL_MAP[lower]) return SYMBOL_MAP[lower];
-  const noSpace = lower.replace(/\s+/g, '');
-  if (SYMBOL_MAP[noSpace]) return SYMBOL_MAP[noSpace];
-  return lower.replace(/[^a-z0-9]/g, ' ').replace(/\s+/g, ' ').trim();
-};
-
-const splitCamelCase = (str: string): string =>
-  str.replace(/([a-z])([A-Z])/g, '$1 $2');
-
-const tokenize = (str: string): string[] => {
-  const normalized = normalize(str);
-  const camelSplit = splitCamelCase(normalized);
-  return camelSplit.split(/\s+/).filter(Boolean);
-};
-
-const generateBigrams = (str: string): string[] => {
-  if (str.length < 3) return [];
-  const bigrams: string[] = [];
-  for (let i = 0; i < str.length - 1; i++) {
-    bigrams.push(str.slice(i, i + 2));
-  }
-  return bigrams;
-};
 
 // ============================================
 // HTTP HELPERS

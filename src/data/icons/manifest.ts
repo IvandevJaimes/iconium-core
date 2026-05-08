@@ -29929,7 +29929,17 @@ export const ICON_MANIFEST: IconManifest[] = [
     ],
     "filename": "htc-vive.svg"
   },
-{
+  {
+    "title": "HTML Academy",
+    "slug": "html-academy",
+    "hex": "302683",
+    "categories": [
+      "Education",
+      "Platform"
+    ],
+    "filename": "html-academy.svg"
+  },
+  {
     "title": "HTML5",
     "slug": "html5",
     "hex": "E34F26",

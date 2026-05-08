@@ -34,6 +34,7 @@ export const SYMBOL_MAP: Record<string, string> = {
   "/e/": "e",
   "vscode": "visualstudiocode",
   "sqlserver":"microsoftsqlserver",
+  "html":"html5",
 };
 
 export const normalize = (str: string): string => {
