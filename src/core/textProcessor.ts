@@ -5,6 +5,8 @@ export const SYMBOL_MAP: Record<string, string> = {
   "c#": "csharp",
   "f#": "fsharp",
   "d3": "d3",
+  "d3.js": "d3",
+  "d3js": "d3",
   "d4": "d4",
   "at&t": "atandt",
   "1&1": "1and1",
@@ -12,6 +14,7 @@ export const SYMBOL_MAP: Record<string, string> = {
   "co-op": "coop",
   "ko-fi": "kofi",
   "p5.js": "p5dotjs",
+  "p5js": "p5dotjs",
   "pr.co": "prdotco",
   "2k": "2k",
   "3m": "3m",
@@ -36,6 +39,9 @@ export const SYMBOL_MAP: Record<string, string> = {
 export const normalize = (str: string): string => {
   const lower = str.toLowerCase().trim();
   if (SYMBOL_MAP[lower]) return SYMBOL_MAP[lower];
+  // Try matching with spaces removed (handles ". net" → "dotnet", "c #" → "csharp")
+  const noSpace = lower.replace(/\s+/g, '');
+  if (SYMBOL_MAP[noSpace]) return SYMBOL_MAP[noSpace];
   return lower.replace(/[^a-z0-9]/g, " ").replace(/\s+/g, " ").trim();
 };
 

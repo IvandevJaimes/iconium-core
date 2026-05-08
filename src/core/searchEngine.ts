@@ -107,6 +107,13 @@ export const searchIcon = (
     return handleShortQuery(normalizedQuery, cleanQuery, limit, page);
   }
 
+  // If no token can generate bigrams (all tokens ≤ 2 chars), fall back to short query
+  const tokens = tokenize(query);
+  const hasBigrams = tokens.some(t => t.length >= BIGRAM_MIN_LENGTH);
+  if (!hasBigrams) {
+    return handleShortQuery(normalizedQuery, cleanQuery, limit, page);
+  }
+
   // LONG QUERIES: Use bigram + inverted index
   return handleLongQuery(normalizedQuery, query, limit, page);
 };
